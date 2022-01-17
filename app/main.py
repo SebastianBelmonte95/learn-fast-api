@@ -5,6 +5,7 @@ from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import json
 
 app = FastAPI()
 
@@ -16,12 +17,16 @@ class Post(BaseModel):
     published: bool = True
 
 
+f = open("../config.json")
+connection_data = json.load(f)
+f.close()
+
 try:
     conn = psycopg2.connect(
-        host="localhost",
-        database="fastapi",
-        user="postgres",
-        password="admin",
+        host=connection_data["host"],
+        database=connection_data["database"],
+        user=connection_data["user"],
+        password=connection_data["password"],
         cursor_factory=RealDictCursor,
     )
     cursor = conn.cursor()
