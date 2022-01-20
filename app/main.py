@@ -11,7 +11,7 @@ import json
 import time
 from . import models
 from .models import Post
-from .database import engine, SessionLocal, get_db
+from .database import engine, get_db
 from sqlalchemy.orm import Session
 
 models.Base.metadata.create_all(bind=engine)
