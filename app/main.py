@@ -18,7 +18,7 @@ class Post(BaseModel):
     published: bool = True
 
 
-f = open("../config.json")
+f = open("config.json")
 connection_data = json.load(f)
 f.close()
 while True:
@@ -63,14 +63,20 @@ async def root():
 
 @app.get("/posts")
 def get_posts():
-    return {"data": myposts}
+    cursor.execute("""SELECT * FROM posts""")
+    posts = cursor.fetchall()
+    print(posts)
+    return {"data": posts}
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-    post_dict = post.dict()
-    post_dict["id"] = len(myposts) + 1
-    myposts.append(post_dict)
+    cursor.execute(
+        """INSERT INTO posts (title,content,published) VALS (%s,%s,%s)
+                   RETURNING *""",
+        (post.title, post.content, post.published),
+    )
+
     return {"data": post_dict}
 
 
