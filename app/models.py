@@ -1,5 +1,6 @@
 from .database import Base
-from sqlalchemy import Column, Integer, Boolean, String
+from sqlalchemy import TIMESTAMP, Column, Integer, Boolean, String
+from sqlalchemy.sql.expression import text
 
 
 class Post(Base):
@@ -9,4 +10,7 @@ class Post(Base):
     content = Column(String, primary_key=False, nullable=False)
     published = Column(
         Boolean, primary_key=False, nullable=False, server_default="TRUE"
+    )
+    created_at = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
     )
