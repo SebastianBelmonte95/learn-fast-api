@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
+import time
 
 app = FastAPI()
 
@@ -20,20 +21,22 @@ class Post(BaseModel):
 f = open("../config.json")
 connection_data = json.load(f)
 f.close()
-
-try:
-    conn = psycopg2.connect(
-        host=connection_data["host"],
-        database=connection_data["database"],
-        user=connection_data["user"],
-        password=connection_data["password"],
-        cursor_factory=RealDictCursor,
-    )
-    cursor = conn.cursor()
-    print("DATABASE CONNECTION SUCCESSFUL")
-except Exception as error:
-    print("DATABASE CONNECTION FAILED")
-    print(str(error))
+while True:
+    try:
+        conn = psycopg2.connect(
+            host=connection_data["host"],
+            database=connection_data["database"],
+            user=connection_data["user"],
+            password=connection_data["password"],
+            cursor_factory=RealDictCursor,
+        )
+        cursor = conn.cursor()
+        print("DATABASE CONNECTION SUCCESSFUL")
+        break
+    except Exception as error:
+        print("DATABASE CONNECTION FAILED")
+        print(str(error))
+        time.sleep(1)
 
 myposts = [
     {"id": 1, "title": "Post 1", "content": "content 1"},
