@@ -7,4 +7,6 @@ class Post(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     title = Column(String, primary_key=False, nullable=False)
     content = Column(String, primary_key=False, nullable=False)
-    published = Column(Boolean, primary_key=False, nullable=False, default=True)
+    published = Column(
+        Boolean, primary_key=False, nullable=False, server_default="TRUE"
+    )
