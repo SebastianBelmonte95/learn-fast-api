@@ -1,3 +1,4 @@
+from cgi import test
 from numbers import Real
 from os import stat
 from typing import Optional
@@ -71,11 +72,14 @@ def get_posts():
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
+    # Staged changes
     cursor.execute(
         """INSERT INTO posts (title,content,published) VALUES (%s,%s,%s) RETURNING *;""",
         (post.title, post.content, post.published),
     )
     new_post = cursor.fetchone()
+
+    # Commiting change to DB
     conn.commit()
     return {"data": new_post}
 
@@ -88,7 +92,8 @@ def get_latest_post():
 
 @app.get("/posts/{id}")
 def get_post(id: int, response: Response):
-    post = find_post(id)
+    cursor.execute("""SELECT * from posts WHERE id = %s;""", (str(id)))
+    post = cursor.fetchone()
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
