@@ -1,6 +1,7 @@
 from cgi import test
 from numbers import Real
 from os import stat
+from sqlite3 import dbapi2
 from typing import Optional
 from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel
@@ -8,8 +9,21 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
 import time
+from . import models
+from models import Post
+from database import engine, SessionLocal
 
+models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # SCHEMAS
 # title: str, content: str
