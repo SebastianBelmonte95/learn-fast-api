@@ -9,3 +9,5 @@ f.close()
 SQLALCHEMY_DATABASE_URL = f"postgresql://{connection_data['user']}:{connection_data['password']}@{connection_data['host']}/{connection_data['database']}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
