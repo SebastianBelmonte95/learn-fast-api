@@ -3,6 +3,7 @@ from . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import schemas
+from typing import List
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -14,7 +15,7 @@ async def root():
 
 
 @app.get("/posts")
-def get_posts(db: Session = Depends(get_db)):
+def get_posts(db: Session = Depends(get_db), response_model=List[schemas.PostBase]):
     posts = db.query(models.Post).all()
     return posts
 
@@ -33,7 +34,7 @@ def create_post(
 
 
 @app.get("/posts/{id}")
-def get_post(id: int, db: Session = Depends(get_db)):
+def get_post(id: int, db: Session = Depends(get_db), response_model=schemas.PostBase):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(

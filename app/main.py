@@ -8,6 +8,7 @@ from .models import Post
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import schemas
+from typing import List
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -57,14 +58,14 @@ async def root():
 
 
 @app.get("/sqlalchemy")
-def test_posts(db: Session = Depends(get_db)):
+def test_posts(db: Session = Depends(get_db), response_model=List[schemas.PostBase]):
 
     posts = db.query(models.Post).all()
     return posts
 
 
 @app.get("/posts")
-def get_posts():
+def get_posts(response_model=List[schemas.PostBase]):
     cursor.execute("""SELECT * FROM posts;""")
     posts = cursor.fetchall()
     print(posts)
@@ -94,7 +95,7 @@ def get_latest_post():
 
 
 @app.get("/posts/{id}")
-def get_post(id: int, response: Response):
+def get_post(id: int, response: Response, response_model=schemas.PostBase):
     cursor.execute("""SELECT * FROM posts WHERE id = %s;""", (str(id)))
     post = cursor.fetchone()
     if not post:
