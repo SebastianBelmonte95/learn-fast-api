@@ -8,14 +8,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-# SCHEMAS
-# title: str, content: str
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-
-
 @app.get("/")
 async def root():
     return {"message": "Welcome to an API working with SQL Alchemy"}

@@ -18,14 +18,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-# SCHEMAS
-# title: str, content: str
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-
-
 f = open("config.json")
 connection_data = json.load(f)
 f.close()
