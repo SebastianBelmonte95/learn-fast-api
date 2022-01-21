@@ -2,6 +2,7 @@ from fastapi import FastAPI, Response, status, HTTPException, Depends
 from . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
+from .schemas import Post
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
