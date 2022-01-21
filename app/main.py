@@ -7,7 +7,7 @@ from . import models
 from .models import Post
 from .database import engine, get_db
 from sqlalchemy.orm import Session
-from .schemas import Post
+from . import schemas
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -72,7 +72,7 @@ def get_posts():
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post):
+def create_post(post: schemas.Post):
     # Staged changes
     cursor.execute(
         """INSERT INTO posts (title,content,published) VALUES (%s,%s,%s) RETURNING *;""",
@@ -117,7 +117,7 @@ def delete_post(id: int):
 
 
 @app.put("/posts/{id}")
-def update_post(id: int, post: Post):
+def update_post(id: int, post: schemas.Post):
     cursor.execute(
         """UPDATE posts SET title = %s, content = %s, published = %s  WHERE id = %s RETURNING *;""",
         (post.title, post.content, post.published, str(id)),
