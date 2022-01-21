@@ -71,7 +71,9 @@ def get_posts():
     return posts
 
 
-@app.post("/posts", status_code=status.HTTP_201_CREATED)
+@app.post(
+    "/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.PostBase
+)
 def create_post(post: schemas.PostCreate):
     # Staged changes
     cursor.execute(
@@ -117,7 +119,7 @@ def delete_post(id: int):
 
 
 @app.put("/posts/{id}")
-def update_post(id: int, post: schemas.PostCreate):
+def update_post(id: int, post: schemas.PostCreate, response_model=schemas.PostBase):
     cursor.execute(
         """UPDATE posts SET title = %s, content = %s, published = %s  WHERE id = %s RETURNING *;""",
         (post.title, post.content, post.published, str(id)),
