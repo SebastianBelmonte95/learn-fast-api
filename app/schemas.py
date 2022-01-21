@@ -6,6 +6,9 @@ class PostBase(BaseModel):
     content: str
     published: bool = True
 
+    class Config:
+        orm_mode = True
+
 
 class PostCreate(PostBase):
     pass
