@@ -60,7 +60,7 @@ async def root():
 def test_posts(db: Session = Depends(get_db)):
 
     posts = db.query(models.Post).all()
-    return {"data": posts}
+    return posts
 
 
 @app.get("/posts")
@@ -68,11 +68,11 @@ def get_posts():
     cursor.execute("""SELECT * FROM posts;""")
     posts = cursor.fetchall()
     print(posts)
-    return {"data": posts}
+    return posts
 
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: schemas.Post):
+def create_post(post: schemas.PostCreate):
     # Staged changes
     cursor.execute(
         """INSERT INTO posts (title,content,published) VALUES (%s,%s,%s) RETURNING *;""",
@@ -82,13 +82,13 @@ def create_post(post: schemas.Post):
 
     # Commiting change to DB
     conn.commit()
-    return {"data": new_post}
+    return new_post
 
 
 @app.get("/posts/latest")
 def get_latest_post():
     post = myposts[len(myposts) - 1]
-    return {"data": post}
+    return post
 
 
 @app.get("/posts/{id}")
@@ -100,7 +100,7 @@ def get_post(id: int, response: Response):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id {id} was not found",
         )
-    return {"post_detail": post}
+    return post
 
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -117,7 +117,7 @@ def delete_post(id: int):
 
 
 @app.put("/posts/{id}")
-def update_post(id: int, post: schemas.Post):
+def update_post(id: int, post: schemas.PostCreate):
     cursor.execute(
         """UPDATE posts SET title = %s, content = %s, published = %s  WHERE id = %s RETURNING *;""",
         (post.title, post.content, post.published, str(id)),
@@ -129,4 +129,4 @@ def update_post(id: int, post: schemas.Post):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id {id} was not found",
         )
-    return {"post_detail": updated_post}
+    return updated_post
