@@ -1,10 +1,4 @@
-from cgi import test
-from numbers import Real
-from os import stat
-from sqlite3 import dbapi2
-from typing import Optional
 from fastapi import FastAPI, Response, status, HTTPException, Depends
-from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
