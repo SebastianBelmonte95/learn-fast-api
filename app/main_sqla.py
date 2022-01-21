@@ -49,7 +49,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session = Depends(get_db)):
-    deleted_post = db.query(models.Post).filter(models.Post.id == id)
+    deleted_post = db.query(models.Post).filter(models.Post.id == id).first()
     if deleted_post == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
