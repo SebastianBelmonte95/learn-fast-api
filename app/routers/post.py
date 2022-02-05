@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from .. import schemas
 from fastapi import (
     APIRouter,
-    FastAPI,
     status,
     HTTPException,
     Depends,
@@ -16,18 +15,16 @@ from fastapi import (
 router = APIRouter()
 
 
-@router.get("/posts")
-def get_posts(db: Session = Depends(get_db), response_model=List[schemas.PostBase]):
+@router.get("/posts", response_model=List[schemas.PostBase])
+def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
 
-@router.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(
-    post: schemas.PostCreate,
-    db: Session = Depends(get_db),
-    response_model=schemas.PostBase,
-):
+@router.post(
+    "/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.PostBase
+)
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()
@@ -35,8 +32,8 @@ def create_post(
     return new_post
 
 
-@router.get("/posts/{id}")
-def get_post(id: int, db: Session = Depends(get_db), response_model=schemas.PostBase):
+@router.get("/posts/{id}", response_model=schemas.PostBase)
+def get_post(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(
@@ -48,8 +45,8 @@ def get_post(id: int, db: Session = Depends(get_db), response_model=schemas.Post
 
 @router.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int, db: Session = Depends(get_db)):
-    deleted_post = db.query(models.Post).filter(models.Post.id == id).first()
-    if deleted_post == None:
+    deleted_post = db.query(models.Post).filter(models.Post.id == id)
+    if deleted_post.first() == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id {id} was not found",
@@ -59,13 +56,8 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.put("/posts/{id}")
-def update_post(
-    id: int,
-    post: schemas.PostCreate,
-    db: Session = Depends(get_db),
-    response_model=schemas.PostBase,
-):
+@router.put("/posts/{id}", response_model=schemas.PostBase)
+def update_post(id: int, post: schemas.PostCreate, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None:
         raise HTTPException(
