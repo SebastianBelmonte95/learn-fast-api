@@ -11,6 +11,7 @@ def login(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
+    # user_credentials are not passed through a json but through form-data in Postman
     user = (
         db.query(models.User)
         .filter(models.User.email == user_credentials.username)
