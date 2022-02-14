@@ -4,7 +4,6 @@ from psycopg2.extras import RealDictCursor
 import json
 import time
 from . import models
-from .models import Post
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import schemas
