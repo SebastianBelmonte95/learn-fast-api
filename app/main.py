@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from . import models
 from .database import engine
 from .routers import post, user, auth
-
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -15,10 +16,6 @@ app.include_router(auth.router)
 @app.get("/")
 async def root():
     return {"message": "Welcome to an API working with SQL Alchemy"}
-
-
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 
 
 @app.exception_handler(ValueError)
