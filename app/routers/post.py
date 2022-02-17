@@ -39,7 +39,7 @@ def create_post(
 
 
 @router.get("/{id}", response_model=schemas.Post)
-def get_post(
+def get_post_by_id(
     id: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(oauth2.get_current_user),
