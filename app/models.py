@@ -1,5 +1,6 @@
+from tkinter import CASCADE, N
 from .database import Base
-from sqlalchemy import Column, Integer, Boolean, String
+from sqlalchemy import Column, ForeignKey, Integer, Boolean, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
 
@@ -14,6 +15,11 @@ class Post(Base):
     )
     created_at = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
+    )
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id", ondelete=CASCADE, onupdate=CASCADE),
+        nullable=False,
     )
 
 
