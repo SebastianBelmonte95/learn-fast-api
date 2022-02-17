@@ -1,10 +1,9 @@
 from typing import List
 
 from app import oauth2
-from .. import models
+from .. import models, schemas
 from ..database import get_db
 from sqlalchemy.orm import Session
-from .. import schemas
 from fastapi import (
     APIRouter,
     status,
@@ -29,9 +28,9 @@ def get_posts(
 def create_post(
     post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    user_id: int = Depends(oauth2.get_current_user),
+    current_user: models.User = Depends(oauth2.get_current_user),
 ):
-    print(user_id)
+    print(current_user.email)
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()
@@ -43,7 +42,7 @@ def create_post(
 def get_post(
     id: int,
     db: Session = Depends(get_db),
-    current_user: int = Depends(oauth2.get_current_user),
+    current_user: models.User = Depends(oauth2.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
@@ -58,7 +57,7 @@ def get_post(
 def delete_post(
     id: int,
     db: Session = Depends(get_db),
-    current_user: int = Depends(oauth2.get_current_user),
+    current_user: models.User = Depends(oauth2.get_current_user),
 ):
     deleted_post = db.query(models.Post).filter(models.Post.id == id)
     if deleted_post.first() == None:
@@ -76,7 +75,7 @@ def update_post(
     id: int,
     post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    current_user: int = Depends(oauth2.get_current_user),
+    current_user: models.User = Depends(oauth2.get_current_user),
 ):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None:
