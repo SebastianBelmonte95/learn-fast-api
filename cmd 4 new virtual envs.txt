@@ -1,1 +1,2 @@
-py -3 -m venv <name>
+python -m venv <env_dir_path>
+env_dir_path can be just a name if the env is local
