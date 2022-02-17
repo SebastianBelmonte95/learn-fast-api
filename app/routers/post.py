@@ -71,7 +71,7 @@ def delete_post(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform request",
         )
-    deleted_post.delete(synchronize_session=False)
+    deleted_post_query.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
