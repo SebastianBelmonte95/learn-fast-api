@@ -19,7 +19,7 @@ def vote(
         if found_vote:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"User {current_user} has already voted on post {vote.post_id}",
+                detail=f"User {current_user.id} has already voted on post {vote.post_id}",
             )
         new_vote = models.Vote(post_id=vote.post_id, user_id=current_user.id)
         db.add(new_vote)
