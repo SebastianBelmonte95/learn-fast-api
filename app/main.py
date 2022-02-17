@@ -15,3 +15,15 @@ app.include_router(auth.router)
 @app.get("/")
 async def root():
     return {"message": "Welcome to an API working with SQL Alchemy"}
+
+
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+
+@app.exception_handler(ValueError)
+async def value_error_exception_handler(request: Request, exc: ValueError):
+    return JSONResponse(
+        status_code=400,
+        content={"message": str(exc)},
+    )
