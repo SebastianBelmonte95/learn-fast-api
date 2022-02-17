@@ -26,4 +26,4 @@ def login(
         )
 
     acces_token = oauth2.create_access_token(data={"user_id": user.id})
-    return {"acces_token": acces_token, "token_type": "bearer"}
+    return {"access_token": acces_token, "token_type": "bearer"}
