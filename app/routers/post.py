@@ -4,6 +4,7 @@ from app import oauth2
 from .. import models, schemas
 from ..database import get_db
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from fastapi import (
     APIRouter,
     status,
@@ -16,7 +17,7 @@ from fastapi import (
 router = APIRouter(prefix="/posts", tags=["posts"])
 
 
-@router.get("/", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
@@ -25,7 +26,9 @@ def get_posts(
     search: Optional[str] = "",
 ):
     posts = (
-        db.query(models.Post)
+        db.query(models.Post, func.count(models.Vote.post_id).label("votes"))
+        .join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True)
+        .group_by(models.Post.id)
         .filter(models.Post.title.contains(search))
         .limit(limit)
         .offset(skip)
