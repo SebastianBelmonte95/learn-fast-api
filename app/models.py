@@ -3,6 +3,7 @@ from .database import Base
 from sqlalchemy import Column, ForeignKey, Integer, Boolean, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
+from sqlalchemy.orm import relationship
 
 
 class Post(Base):
@@ -21,6 +22,7 @@ class Post(Base):
         ForeignKey("users.id", ondelete=CASCADE, onupdate=CASCADE),
         nullable=False,
     )
+    owner = relationship("User")
 
 
 class User(Base):
