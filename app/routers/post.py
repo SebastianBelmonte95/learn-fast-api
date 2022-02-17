@@ -19,7 +19,7 @@ router = APIRouter(prefix="/posts", tags=["posts"])
 
 @router.get("/", response_model=List[schemas.Post])
 def get_posts(
-    db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user)
+    db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)
 ):
     posts = db.query(models.Post).all()
     return posts
@@ -43,7 +43,7 @@ def create_post(
 def get_post(
     id: int,
     db: Session = Depends(get_db),
-    user_id: int = Depends(oauth2.get_current_user),
+    current_user: int = Depends(oauth2.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
@@ -58,7 +58,7 @@ def get_post(
 def delete_post(
     id: int,
     db: Session = Depends(get_db),
-    user_id: int = Depends(oauth2.get_current_user),
+    current_user: int = Depends(oauth2.get_current_user),
 ):
     deleted_post = db.query(models.Post).filter(models.Post.id == id)
     if deleted_post.first() == None:
@@ -76,7 +76,7 @@ def update_post(
     id: int,
     post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    user_id: int = Depends(oauth2.get_current_user),
+    current_user: int = Depends(oauth2.get_current_user),
 ):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     if post_query.first() == None:
