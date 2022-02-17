@@ -26,7 +26,5 @@ def login(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials"
         )
 
-    # Create a token
     acces_token = oauth2.create_access_token(data={"user_id": user.id})
-    # Return token
     return {"acces_token": acces_token, "token_type": "bearer"}
