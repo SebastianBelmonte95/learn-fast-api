@@ -1,4 +1,3 @@
-from base64 import encode
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from . import schemas, database, models
