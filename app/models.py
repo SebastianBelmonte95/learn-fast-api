@@ -1,4 +1,3 @@
-from tkinter import CASCADE, N
 from .database import Base
 from sqlalchemy import Column, ForeignKey, Integer, Boolean, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -19,7 +18,7 @@ class Post(Base):
     )
     user_id = Column(
         Integer,
-        ForeignKey("users.id", ondelete=CASCADE, onupdate=CASCADE),
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
     )
     owner = relationship("User")
