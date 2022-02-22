@@ -38,13 +38,13 @@ class Vote(Base):
     __tablename__ = "votes"
     user_id = Column(
         Integer,
-        ForeignKey("users.id", ondelete=CASCADE, onupdate=CASCADE),
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True,
         nullable=False,
     )
     post_id = Column(
         Integer,
-        ForeignKey("posts.id", ondelete=CASCADE, onupdate=CASCADE),
+        ForeignKey("posts.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True,
         nullable=False,
     )
